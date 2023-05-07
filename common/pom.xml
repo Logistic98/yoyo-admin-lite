@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.yoyo</groupId>
+        <artifactId>yoyo-admin</artifactId>
+        <version>0.0.1</version>
+    </parent>
+    <groupId>com.yoyo.admin</groupId>
+    <artifactId>common</artifactId>
+    <version>0.0.1</version>
+    <name>common</name>
+    <description>yoyo-admin common module</description>
+
+    <!--统一管理全局变量-->
+    <properties>
+        <java.version>1.8</java.version>
+        <hutool.all.version>5.7.7</hutool.all.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <commons-io.version>2.6</commons-io.version>
+        <poi.version>4.1.1</poi.version>
+        <fastjson.version>1.2.58</fastjson.version>
+        <swagger.version>2.9.2</swagger.version>
+        <swagger.dependency.version>1.5.21</swagger.dependency.version>
+        <knife4j.spring.boot.starter.version>2.0.2</knife4j.spring.boot.starter.version>
+        <swagger.bootstrap.ui.version>1.9.6</swagger.bootstrap.ui.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <druid.spring.boot.starter.version>1.1.10</druid.spring.boot.starter.version>
+    </properties>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <!-- Redis公共模块-->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>redis_common</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+        <!-- ES公共模块-->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>es_common</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+        <!-- MinIO公共模块-->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>minio_common</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+        <!-- lombok依赖 让代码更简洁 https://www.projectlombok.org/-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- Hutool 工具类库依赖 https://www.hutool.cn/docs/ -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.all.version}</version>
+        </dependency>
+        <!-- Apache Commons Lang 工具类依赖 https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <!-- commons-io https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+        <!-- Poi excel process -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-schemas</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+        <!-- Alibaba fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- swagger2 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+            <!--排除swagger2的annotations和models依赖，然后再引入1.5.21版本的annotations和models依赖-->
+            <exclusions>
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-models</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <!--引入1.5.21版本的annotations和models依赖-->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger.dependency.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${swagger.dependency.version}</version>
+        </dependency>
+        <!--Knife4J版的Swagger UI-->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+            <version>${knife4j.spring.boot.starter.version}</version>
+        </dependency>
+        <!-- Swagger添加权限验证 -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>swagger-bootstrap-ui</artifactId>
+            <version>${swagger.bootstrap.ui.version}</version>
+        </dependency>
+        <!--jjwt-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <!-- Druid数据库连接池 https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.spring.boot.starter.version}</version>
+        </dependency>
+        <!-- 邮箱通知 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

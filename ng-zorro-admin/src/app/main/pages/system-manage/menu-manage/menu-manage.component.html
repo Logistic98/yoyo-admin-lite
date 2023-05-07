@@ -1,0 +1,164 @@
+
+<div class="main_content">
+  <div class="tool_box">
+    <button nz-button nzType="primary" style="margin-left:0;" (click)="showAddModal()" *permission="'menu_add'">
+      <i nz-icon nzType="plus" nzTheme="outline"></i>新增
+    </button>
+  </div>
+
+  <div class="table_box">
+    <nz-table #expandTable [nzData]="listOfData" nzTableLayout="fixed" [nzLoading]="loading" [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th >菜单名称</th>
+          <th >菜单类型</th>
+          <th>上级菜单</th>
+          <th>权限</th>
+          <th nzWidth="400px">url</th>
+          <!-- <th nzWidth="200px">排序</th> -->
+          <!-- <th>创建时间</th> -->
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let data of listOfData">
+          <ng-container *ngFor="let item of mapOfExpandedData[data.key]">
+            <tr *ngIf="(item.parent && item.parent.expand) || !item.parent" [ngClass]="item.visible!.toLowerCase()">
+              <td [nzIndentSize]="item.level! * 20" [nzShowExpand]="item.children&&item.children.length>0"
+                [(nzExpand)]="item.expand" (nzExpandChange)="collapse(mapOfExpandedData[data.key], item, $event)"
+                style="text-align: left;">
+                {{ item.name }}
+              </td>
+              <td>
+                <span *ngIf="item.type=='MAIN'">目录</span>
+                <span *ngIf="item.type=='CHILD'">菜单</span>
+                <span *ngIf="item.type=='BUTTON'">按钮</span>
+              </td>
+              <td>{{ item.parent?.name || '-'}}</td>
+              <td>
+                {{item.permission||'-'}}
+              </td>
+              <td>{{ item.url || '-'}}</td>
+              <!-- <td>{{ item.sort || '-'}}</td> -->
+              <!-- <td>{{ item.createTime }}</td> -->
+              <td>
+                <a (click)="showEditModal(item)">修改</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="delBasement(item.key)">删除</a>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+<!-- 新增 -->
+<nz-modal nzWidth="460px" [(nzVisible)]="isAddVisible" nzTitle="菜单管理" (nzOnCancel)="handleAddCancel()"
+  (nzOnOk)="handleAddOk()">
+  <form nz-form [formGroup]="modalForm"  *nzModalContent>
+    <div nz-row>
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" nzRequired>类型</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-radio-group formControlName="type">
+              <label nz-radio-button *ngFor="let item of menuTypes" [nzValue]="item.value">{{item.label}}</label>
+            </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item *ngIf="modalForm.value.type==='CHILD' || modalForm.value.type==='BUTTON'">
+          <nz-form-label [nzSpan]="6">上级菜单</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-tree-select style="width: 250px" [nzNodes]="listOfData" nzShowSearch [(ngModel)]="parentMenuId"
+              [nzDropdownStyle]="{'max-height':'200px'}" [ngModelOptions]="{standalone: true}"
+              (ngModelChange)="selectParent($event)">
+            </nz-tree-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" nzRequired>名称</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzHasFeedback [nzErrorTip]="userErrorTpl1">
+            <input nz-input formControlName="name" />
+            <ng-template #userErrorTpl1 let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                请输入名称
+              </ng-container>
+              <ng-container *ngIf="control.hasError('maxlength')">
+                名称不超过15字
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">描述</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzHasFeedback [nzErrorTip]="userErrorTpl2">
+            <input nz-input formControlName="desc" />
+            <ng-template #userErrorTpl2 let-control>
+              <ng-container *ngIf="control.hasError('maxlength')">
+                描述不超过15字
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+       
+       
+        <nz-form-item *ngIf="modalForm.value.type=='CHILD'">
+          <nz-form-label [nzSpan]="6" nzRequired>url</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzHasFeedback [nzErrorTip]="userErrorTpl3">
+            <input nz-input formControlName="url" />
+            <ng-template #userErrorTpl3 let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                请输入url
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item *ngIf="modalForm.value.type==='CHILD' || modalForm.value.type==='BUTTON'">
+          <nz-form-label [nzSpan]="6" nzRequired>permission</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzHasFeedback [nzErrorTip]="userErrorTpl4">
+            <input nz-input formControlName="permission"/>
+            <ng-template #userErrorTpl4 let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                请输入权限
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">状态</nz-form-label>
+          <nz-form-control [nzSpan]="16"  >
+            <nz-switch formControlName="visible" (ngModelChange)="switchChange($event)"></nz-switch>
+          </nz-form-control>
+        </nz-form-item>
+
+       <nz-form-item>
+          <nz-form-label [nzSpan]="6">排序</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <nz-input-number formControlName="sort" [nzMin]="1" [nzStep]="1"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+        <!--  <nz-form-item>
+          <nz-form-label nzXs='6'>图标</nz-form-label>
+          <nz-form-control nzXs='16'>
+            <nz-select style="width: 200px;" nzShowSearch nzAllowClear nzPlaceHolder="请选择" formControlName='form_icon'>
+              <nz-option *ngFor="let item of iconOpts" nzCustomContent [nzLabel]="item.label" [nzValue]="item.value">
+                <i nz-icon nzType="{{item.label}}"></i>
+                <span style="padding-left:10px;">{{item.label}}</span>
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item> -->
+      </div>
+    </div>
+  </form>
+  <div *nzModalFooter>
+    <button nz-button  nzType="default" (click)="handleAddOk()"
+      [disabled]="!modalForm.valid || modalForm.value.type=='CHILD'&&!modalForm.value.url|| modalForm.value.type=='CHILD'&&!modalForm.value.permission||modalForm.value.type=='CHILD'&&!modalForm.value.parentMenu || modalForm.value.type=='BUTTON'&&!modalForm.value.permission || modalForm.value.type=='BUTTON'&&!modalForm.value.parentMenu">保存</button>
+    <button nz-button nzType="default" (click)="handleAddCancel()">返回</button>
+  </div>
+</nz-modal>

@@ -1,0 +1,67 @@
+<nz-layout class="app-layout">
+  <nz-sider class="menu-sidebar"
+            nzCollapsible
+            nzWidth="256px"
+            nzBreakpoint="md"
+            [(nzCollapsed)]="isCollapsed"
+            [nzTrigger]="null">
+    <div class="sidebar-logo">
+      <a href="https://ng.ant.design/" target="_blank">
+        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
+        <h1>Angular-zorro-admin</h1>
+      </a>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" class="sider-menu" [nzInlineCollapsed]="isCollapsed">
+      <ng-container *ngFor="let item of showMenu">
+        <ng-container *ngIf="item.children.length!=0">
+          <li nz-submenu *ngIf="!item.nzIconfont" [nzTitle]="item.name" [nzIcon]="item.ico" [nzOpen]="true">
+            <ul>
+              <li *ngFor="let it of item.children" [routerLink]="it.link" nz-menu-item nzMatchRouter>{{it.name}}</li>
+            </ul>
+          </li>
+          <li nz-submenu *ngIf="item.nzIconfont" [nzTitle]="titleTpl">
+            <ng-template #titleTpl> <i nz-icon [nzIconfont]="item.nzIconfont"></i><span>{{item.name}}</span></ng-template>
+            <ul>
+              <li *ngFor="let it of item.children" [routerLink]="it.link" nz-menu-item nzMatchRouter>{{it.name}}</li>
+            </ul>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="item.children.length==0">
+          <li  nz-menu-item *ngIf="!item.nzIconfont" [routerLink]="item.link" nzMatchRouter>
+            <i nz-icon [nzType]="item.ico"></i>
+            <span>{{item.name}}</span>
+          </li>
+          <li  nz-menu-item *ngIf="item.nzIconfont"  [routerLink]="item.link" nzMatchRouter>
+            <i nz-icon [nzIconfont]="item.nzIconfont"></i><span>{{item.name}}</span>
+          </li>
+        </ng-container>
+      </ng-container>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+            <i class="trigger"
+               nz-icon
+               [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+            ></i>
+        </span>
+        <nz-breadcrumb [nzAutoGenerate]="true" [nzRouteLabel]="'title'"></nz-breadcrumb>
+        <div class="right-menu">
+          <app-screenfull></app-screenfull>
+          <app-user></app-user>
+        </div>
+      </div>
+      <div class="tag-view-box">
+        <app-tag-view></app-tag-view>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
+

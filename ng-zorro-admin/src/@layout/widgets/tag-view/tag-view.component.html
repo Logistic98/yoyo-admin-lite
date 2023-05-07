@@ -1,0 +1,3 @@
+<nz-tag nzMode="closeable" (nzOnClose)="onClose($event,view)" *ngFor="let view of visitedViews" [nzColor]="currentUrl==view.urlAfterRedirects?'#108ee9':'default'">
+  <a [routerLink]="[view.url]">{{view.title}}</a>
+</nz-tag>

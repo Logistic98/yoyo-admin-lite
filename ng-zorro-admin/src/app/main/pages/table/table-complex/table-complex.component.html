@@ -1,0 +1,145 @@
+<div class="">
+  <div class="tool_box">
+    <div class="ipt_box">
+      <nz-input-group [nzSuffix]="suffixIconSearch">
+        <input type="text" nz-input placeholder="请输入" [(ngModel)]="searchContent"/>
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <div (click)="search()"><i nz-icon nzType="search"></i></div>
+      </ng-template>
+    </div>
+    <nz-range-picker [(ngModel)]="date" (ngModelChange)="dateChange($event)" nzMode="month" [nzFormat]="'yyyy年/MM月'"></nz-range-picker>
+    <button nz-button nzType="primary" nzGhost style="margin-left:auto;" (click)="removeAllChecked()">
+      <i nz-icon nzType="delete"></i>
+      删除
+    </button>
+    <button nz-button nzType="primary" nzGhost (click)="exportAllChecked()">
+      <i nz-icon nzType="download"></i>
+      导出
+    </button>
+  </div>
+  <div class="table_box">
+    <ng-template #totalTemplate let-total> 共 {{ total }} 项记录</ng-template>
+    <nz-table
+    #rowSelectionTable
+    [nzTotal]="total"
+    [nzShowTotal]="totalTemplate"
+    nzShowPagination
+    nzShowSizeChanger
+    [nzData]="listOfData"
+    (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+    [nzScroll]="{ x: '1100px' }"
+    [nzLoading] = "loading"
+    [nzFrontPagination] = "false"
+    [nzTotal] = "total"
+    [nzPageIndex] = "page"
+    [nzPageSize] = "pageSize"
+    (nzPageIndexChange)="pageIndexChange($event)"
+    (nzPageSizeChange)="pageSizeChange($event)"
+  >
+    <thead>
+      <tr>
+        <th
+            nzWidth="60px"
+            [(nzChecked)]="checked"
+            [nzIndeterminate]="indeterminate"
+            (nzCheckedChange)="onAllChecked($event)"
+          ></th>
+          <th>
+            姓名
+          </th>
+          <th
+            [nzFilters] ="sexFilters"
+            [nzFilterFn] = "sexFiltersFn"
+            (nzFilterChange) = "sexFilterHandle($event)"
+          >
+            性别
+          </th>
+          <th  [nzSortFn] = "sortScoreFn">分数</th>
+          <th>手机号</th>
+          <th>身份证号</th>
+          <th>社会统一信用代码</th>
+          <th>所在省</th>
+          <th>创建时间</th>
+          <th nzRight>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of rowSelectionTable.data">
+        <td
+          [nzChecked]="setOfCheckedId.has(data.id)"
+          (nzCheckedChange)="onItemChecked(data.id, $event)"
+        ></td>
+        <td>{{ data.name }}</td>
+        <td>
+          <span *ngIf="data.gender===1">男</span>
+          <span *ngIf="data.gender===2">女</span>
+        </td>
+        <td>{{data.score}}</td>
+        <td>{{ data.phone }}</td>
+        <td>{{ data.idcard }}</td>
+        <td>{{ data.socialcode }}</td>
+        <td>{{ data.address }}</td>
+        <td>{{ data.time }}</td>
+        <td nzRight class="handle">
+          <span (click)="edit(data)" class="edit">修改</span>
+          <span (click)="remove(data)" class="remove">删除</span>
+          <span (click)="export(data)" class="export">导出</span>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    nzTitle="编辑"
+    (nzOnCancel)="modalCancel()"
+    (nzOnOk)="modalOk()"
+    [nzOkLoading]="isOkLoading"
+  >
+    <div *nzModalContent>
+      <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">姓名</nz-form-label>
+          <nz-form-control [nzSpan]="14" nzErrorTip="请输入姓名">
+            <input nz-input formControlName="name" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">手机号</nz-form-label>
+          <nz-form-control [nzSpan]="14" nzErrorTip="请输入手机号">
+            <input nz-input formControlName="phone" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">身份证号</nz-form-label>
+          <nz-form-control [nzSpan]="14" nzErrorTip="请输入身份证号">
+            <input nz-input formControlName="idcard" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">社会统一信用代码</nz-form-label>
+          <nz-form-control [nzSpan]="14" nzErrorTip="请输入社会统一信用代码">
+            <input nz-input formControlName="socialcode" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">所在省</nz-form-label>
+          <nz-form-control [nzSpan]="14" nzErrorTip="请选择省">
+            <nz-select formControlName="address">
+              <nz-option nzValue="山东省" nzLabel="山东省"></nz-option>
+              <nz-option nzValue="河北省" nzLabel="河北省"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">创建时间</nz-form-label>
+          <nz-form-control [nzSpan]="14" nzErrorTip="请选择时间">
+            <nz-date-picker formControlName="time"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+  </div>
+</div>
+

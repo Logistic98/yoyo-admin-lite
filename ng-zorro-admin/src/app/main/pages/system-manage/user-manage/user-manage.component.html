@@ -1,0 +1,144 @@
+
+<div class="main_content">
+  <div class="tool_box">
+    <div class="ipt_box">
+      <nz-input-group [nzSuffix]="suffixIconSearch">
+        <input type="text" nz-input placeholder="请输入姓名" [(ngModel)]="searchName" />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <div (click)="search()" class="search_ico"><i nz-icon nzType="search"></i></div>
+      </ng-template>
+    </div>
+
+    <button nz-button nzType="primary"  (click)="showAddModal()">
+      <i nz-icon nzType="plus" nzTheme="outline"></i>新增
+    </button>
+    <button nz-button nzType="primary" style="margin-left:10px;" (click)="showChangePassword()">
+      修改密码
+    </button>
+  </div>
+  <div class="table_box">
+    <ng-template #totalTemplate let-total> 共 {{ total }} 项记录</ng-template>
+    <nz-table [nzTotal]="total" [nzShowTotal]="totalTemplate" #rowSelectionTable nzShowPagination [nzPageIndex]="page"
+      [nzPageSize]="pageSize" nzShowSizeChanger [nzFrontPagination]="false" [nzData]="listOfData" [nzLoading]="loading"
+      (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
+
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>角色</th>
+          <th>手机号码</th>
+          <th nzRight nzWidth="280px">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of rowSelectionTable.data; let i = index">
+
+          <td>{{ data.name }}</td>
+          <td>
+            {{data.role.name}}
+          </td>
+          <td>{{data.phoneNumber}}</td>
+          <td nzRight>
+            <a (click)="showEditModal(data)">修改</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="delBasement(data.id)">删除</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+
+<!-- 新增 -->
+<nz-modal nzWidth="820px" [(nzVisible)]="isAddVisible" nzTitle="用户管理" (nzOnCancel)="handleAddCancel()">
+  <form nz-form [formGroup]="modalForm" *nzModalContent>
+    <div nz-row>
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" nzRequired>姓名</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzHasFeedback nzErrorTip="请输入姓名,不超过10个字符">
+            <input nz-input formControlName="name" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" nzRequired>性别</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzHasFeedback nzErrorTip="请选择性别">
+            <nz-select formControlName="gender">
+              <nz-option [nzValue]="gender.value" [nzLabel]="gender.label" *ngFor="let gender of genders"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" nzRequired>角色</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzHasFeedback nzErrorTip="请选择角色">
+            <nz-select formControlName="roleId">
+              <nz-option [nzValue]="role.id" [nzLabel]="role.name" *ngFor="let role of roles"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" nzRequired>部门</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzHasFeedback nzErrorTip="请选择部门">
+            <nz-tree-select  [nzNodes]="deptTree" nzShowSearch formControlName="deptId"
+              [nzDropdownStyle]="{'max-height':'200px'}"
+              (ngModelChange)="selectDept($event)">
+            </nz-tree-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="!isEdit">
+          <nz-form-label [nzSpan]="6" nzRequired>登录用户名</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzHasFeedback [nzErrorTip]="userErrorTpl1">
+            <input nz-input formControlName="username" />
+            <ng-template #userErrorTpl1 let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                请输入用户名
+              </ng-container>
+              <ng-container *ngIf="control.hasError('minlength')">
+                最少3个字符
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="!isEdit">
+          <nz-form-label [nzSpan]="6" nzRequired>登录密码</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzHasFeedback nzErrorTip="请输入密码">
+            <input nz-input formControlName="password" type="password" autocomplete='new-password' />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" nzRequired>手机号码</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzHasFeedback nzErrorTip="请输入正确的手机号">
+            <input nz-input formControlName="phoneNumber" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <div *nzModalFooter>
+    <button nz-button nzType="primary" (click)="handleAddOk()" [disabled]="!modalForm.valid">保存</button>
+    <button nz-button nzType="default" (click)="handleAddCancel()">返回</button>
+  </div>
+</nz-modal>
+
+<!-- 修改密码 -->
+<nz-modal nzWidth="820px"  [(nzVisible)]="isPassWordVisible" nzTitle="修改密码" (nzOnCancel)="changePassWordCancle()">
+  <form nz-form [formGroup]="changePassWordForm" *nzModalContent>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>原密码</nz-form-label>
+      <nz-form-control [nzSpan]="16" nzHasFeedback nzErrorTip="请输入原密码">
+        <input nz-input formControlName="oldPassword"/>
+      </nz-form-control>
+    </nz-form-item>  
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired >新密码</nz-form-label>
+      <nz-form-control [nzSpan]="16" nzHasFeedback  nzErrorTip="请输入新密码">
+        <input nz-input formControlName="newPassword"/>
+      </nz-form-control>
+    </nz-form-item>  
+</form>
+<div *nzModalFooter>
+  <button nz-button nzType="primary" (click)="changePassWordOk()" [disabled]="!changePassWordForm.valid">确定</button>
+  <button nz-button nzType="default" (click)="handleAddCancel()">取消</button>
+</div>
+</nz-modal>

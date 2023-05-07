@@ -1,0 +1,76 @@
+<div class="main_content">
+  <div class="tool_box">
+    <button nz-button nzType="primary" style="margin-left:0;" (click)="showAddModal()">
+      <i nz-icon nzType="plus" nzTheme="outline"></i>新增
+    </button>
+  </div>
+  <div class="table_box">
+    <nz-table [nzShowPagination]="false" #rowSelectionTable nzShowPagination nzShowSizeChanger
+      [nzData]="listOfData" [nzLoading]="loading">
+      <thead>
+        <tr>
+          <th>角色名称</th>
+          <th>创建时间</th>
+          <th nzRight nzWidth="380px">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of rowSelectionTable.data; let i = index">
+        
+          <td>{{ data.name }}</td>
+          <td>{{ data.createTime }}</td>
+          <td nzRight>
+            <a (click)="showEditModal(data)">配置菜单</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="delBasement(data.id)">删除</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+   
+  </div>
+</div>
+<!-- 新增 -->
+<nz-modal nzWidth="820px"  [(nzVisible)]="isAddVisible" nzTitle="角色管理" (nzOnCancel)="handleAddCancel()">
+  <form nz-form [formGroup]="modalForm" *nzModalContent>
+      <div nz-row>
+          <div nz-col nzSpan="24">
+              <nz-form-item>
+                  <nz-form-label [nzSpan]="6" nzRequired>角色名称</nz-form-label>
+                  <nz-form-control [nzSpan]="16" nzHasFeedback [nzErrorTip]="userErrorTpl1">
+                  <input nz-input formControlName="name" />
+                  <ng-template #userErrorTpl1 let-control>
+                      <ng-container *ngIf="control.hasError('required')">
+                      请输入角色名称
+                      </ng-container>
+                      <ng-container *ngIf="control.hasError('maxlength')">
+                        名称不超15字
+                        </ng-container>
+                  </ng-template>
+                  </nz-form-control>
+              </nz-form-item> 
+          </div>
+          <div nz-col nzSpan="24" >
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzRequired>菜单</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzHasFeedback >
+                  <nz-tree
+                  #nzTreeComponent
+                  [nzData]="menuList"
+                  nzMultiple  
+                  nzCheckable
+                  nzCheckStrictly
+                  (nzCheckBoxChange)="nzEvent2($event)"
+                  [nzCheckedKeys]="defaultCheckedKeys"
+                  >
+                </nz-tree>
+                </nz-form-control>
+            </nz-form-item> 
+          </div>
+      </div>
+</form>
+<div *nzModalFooter>
+<button nz-button nzType="primary" (click)="handleAddOk()" [disabled]="!modalForm.valid">保存</button>
+<button nz-button nzType="default" (click)="handleAddCancel()">取消</button>
+</div>
+</nz-modal>
