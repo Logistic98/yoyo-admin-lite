@@ -1,0 +1,9 @@
+<div class="list_box" #container>
+ 
+  <ul>
+    <li class="item" *ngFor="let item of list; let index = index">
+      我是第{{index}}条数据
+    </li>
+  </ul>
+  <nz-spin nzTip="Loading..." [hidden]="!loading"></nz-spin>
+</div>

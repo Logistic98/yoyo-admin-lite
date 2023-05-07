@@ -1,0 +1,82 @@
+
+<div class="main_content">
+  <div class="tool_box">
+    <button nz-button nzType="primary" style="margin-left:0;" (click)="showAddModal()">
+      <i nz-icon nzType="plus" nzTheme="outline"></i>新增
+    </button>
+  </div>
+  <div class="table_box">
+    <nz-table #expandTable [nzData]="listOfData" nzTableLayout="fixed" [nzLoading]="loading" [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th >部门名称</th>
+          <th>启/停</th>
+          <th nzRight nzWidth="280px">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let data of listOfData">
+          <ng-container *ngFor="let item of mapOfExpandedData[data.key]">
+            <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+              <td [nzIndentSize]="item.level! * 20" [nzShowExpand]="item.children&&item.children.length>0"
+                [(nzExpand)]="item.expand" (nzExpandChange)="collapse(mapOfExpandedData[data.key], item, $event)"
+                style="text-align: left;">
+                {{ item.name }}
+              </td>
+              <td>
+                <nz-switch [ngModel]="item.status" [nzControl]="true" [nzLoading]="switchLoading"  (click)="clickSwitch(item)"></nz-switch>
+              </td>
+              <td nzRight>  
+                <a (click)="showEditModal(item)">修改</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="delBasement(item.id)">删除</a>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+
+<!-- 新增 -->
+<nz-modal nzWidth="460px"  [(nzVisible)]="isAddVisible" nzTitle="部门管理" (nzOnCancel)="handleAddCancel()">
+ 
+  <form nz-form [formGroup]="modalForm" *nzModalContent>
+      <div nz-row>
+          <div nz-col nzSpan="24">
+              <nz-form-item>
+                  <nz-form-label [nzSpan]="6" nzRequired>部门名称</nz-form-label>
+                  <nz-form-control [nzSpan]="16" nzHasFeedback [nzErrorTip]="userErrorTpl1">
+                  <input nz-input formControlName="name" />
+                  <ng-template #userErrorTpl1 let-control>
+                      <ng-container *ngIf="control.hasError('required')">
+                      请输入部门名称
+                      </ng-container>
+                      <ng-container *ngIf="control.hasError('maxlength')">
+                        名称不超15字
+                      </ng-container>
+                      <ng-container *ngIf="control.hasError('hasExist')">
+                        部门名称已存在
+                      </ng-container>
+                  </ng-template>
+                  </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="6">上级部门</nz-form-label>
+                <nz-form-control [nzSpan]="16">
+                  <nz-tree-select  [nzNodes]="listOfData" nzShowSearch [(ngModel)]="parentMenuId"
+                    [nzDropdownStyle]="{'max-height':'200px'}" [ngModelOptions]="{standalone: true}"
+                    (ngModelChange)="selectParent($event)">
+                  </nz-tree-select>
+                </nz-form-control>
+              </nz-form-item>
+          </div>
+         
+      </div>
+</form>
+<div *nzModalFooter>
+  <button nz-button nzType="primary" (click)="handleAddOk()" [disabled]="!modalForm.valid">保存</button>
+  <button nz-button nzType="default" (click)="handleAddCancel()">取消</button>
+</div>
+</nz-modal>

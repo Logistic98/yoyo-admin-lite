@@ -1,0 +1,14 @@
+/* reset */
+html { -webkit-tap-highlight-color: rgba(0, 0, 0, 0);}
+body,input,select,textarea,button { font-family: 'Microsoft Yahei', 'Helvetica Neue', Helvetica, 'Lucida Grande', Arial, 'Hiragino Sans GB', 'WenQuanYi Micro Hei', STHeiti, SimSun, sans-serif;}
+body, h1, h2, h3, h4, p, ul, ol, dd, dl, form { margin: 0;}
+hr { margin-top: 20px; margin-bottom: 20px; border: 0; border-top: 1px solid #eee;}
+img { max-width: 100%; height: auto; vertical-align: top; -ms-interpolation-mode: bicubic; border: 0 ;}
+ul { padding-left: 0; list-style-type: none;}
+i, em { font-style: normal;}
+big { font-size: 1.3em;}
+small { font-size: 0.77em;}
+a { -webkit-transition: all 0.3s ease; transition: all 0.3s ease; text-decoration: none; outline: 0;}
+article, aside, dialog, footer, header, section, nav, figure, menu, audio, canvas, progress, video { display: block;}
+table { border-spacing: 0; border-collapse: collapse;background-color: transparent;}
+td, th { padding: 0;}

@@ -1,0 +1,18 @@
+{
+    "/api": {
+      "target": "http://127.0.0.1:8081",
+      "secure": true
+    },
+    "/auth": {
+      "target": "http://127.0.0.1:8081",
+      "secure": true
+    },
+    "/uploads": {
+      "target": "http://127.0.0.1:8081",
+      "secure": true
+    },
+    "/logout": {
+      "target": "http://127.0.0.1:8081",
+      "secure": true
+    }
+}

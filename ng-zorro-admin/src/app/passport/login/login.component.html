@@ -1,0 +1,52 @@
+<form nz-form [formGroup]="form" (ngSubmit)="submit()">
+  <nz-alert
+    *ngIf="error"
+    [nzType]="'error'"
+    [nzMessage]="error"
+    [nzShowIcon]="true"
+    style="margin-bottom:20px;"
+  ></nz-alert>
+  <nz-form-item>
+    <nz-form-control [nzErrorTip]='combineTpl'>
+      <nz-input-group nzSize="large" nzPrefixIcon="user">
+        <input nz-input formControlName="userName" placeholder="输入用户名" />
+      </nz-input-group>
+      <ng-template #combineTpl let-control>
+        <ng-container *ngIf="control.hasError('required')">请输入用户名</ng-container>
+        <ng-container *ngIf="control.hasError('minlength')">最少3个字符</ng-container>
+        <ng-container *ngIf="control.hasError('pattern')">不能有中文</ng-container>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control nzErrorTip="请输入密码">
+      <nz-input-group nzSize="large" nzPrefixIcon="lock">
+        <input
+          nz-input
+          type="password"
+          formControlName="password"
+          placeholder="请输入密码"
+        />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- <nz-form-item>
+    <nz-col [nzSpan]="12">
+      <label nz-checkbox formControlName="remember">自动登录</label>
+    </nz-col>
+  </nz-form-item> -->
+  <nz-form-item style="margin-top:36px">
+    <button
+      nz-button
+      type="submit"
+      nzType="primary"
+      nzSize="large"
+      nzBlock
+      [nzLoading]="loading"
+      class="ant-btn__block"
+    >
+      登录
+    </button>
+  </nz-form-item>
+</form>

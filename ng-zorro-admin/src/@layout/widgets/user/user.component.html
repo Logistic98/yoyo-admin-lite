@@ -1,0 +1,18 @@
+<div class="user" nz-dropdown [nzDropdownMenu]="userMenu" nzTrigger="click"  style="margin-right:18px;">
+  <nz-avatar nzIcon="user" nzSrc="./assets/imgs/user.png"  class="avatar"></nz-avatar>
+  <span class="name_box"> {{ currentUser || '管理员' }}</span>
+  <i nz-icon nzType="caret-down" nzTheme="outline" class="down-icon"></i>
+</div>
+<nz-dropdown-menu #userMenu="nzDropdownMenu">
+  <div nz-menu class="width-sm">
+    <div nz-menu-item routerLink="/">
+      <i nz-icon nzType="home"style="margin-right:10px"></i>
+      首页
+    </div>
+    <li nz-menu-divider></li>
+    <div nz-menu-item (click)="logout()" >
+      <i nz-icon nzType="logout"style="margin-right:10px"></i>
+       退出系统
+    </div>
+  </div>
+</nz-dropdown-menu>

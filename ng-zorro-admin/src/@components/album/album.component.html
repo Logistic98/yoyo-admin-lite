@@ -1,0 +1,24 @@
+<div class="album_box" [hidden]="!config?.visible">
+  <div class="album_con">
+    <div class="img_list">
+      <div class="item">
+        <img [src]="curImg" alt="">
+        <p>{{curTitle}}</p>
+        <div [hidden]="!config.download" class="download">
+          <button nz-button nzType="primary" >
+            <a [href]="curImg" [download]="curImg" target="_blank">
+              <i nz-icon nzType="download"></i>
+              下载
+            </a>
+
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="album_tool">
+      <span class="prev" [hidden]="!config.showPrev" (click)="prev()"><i nz-icon nzType="left" nzTheme="outline"></i></span>
+      <span class="next" [hidden]="!config.showNext" (click)="next()"><i nz-icon nzType="right" nzTheme="outline"></i></span>
+      <span class="close" (click)="close()"><i nz-icon nzType="close" nzTheme="outline"></i></span>
+    </div>
+  </div>
+</div>

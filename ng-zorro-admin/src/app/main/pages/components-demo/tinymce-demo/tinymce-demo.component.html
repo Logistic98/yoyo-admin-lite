@@ -1,0 +1,11 @@
+<h3>默认宽高, language = en
+</h3>
+<app-tinymce  [content]="content"  language="en" (contentChange)="hanleChange($event)"></app-tinymce>
+<br>
+<h3>宽800px, 高300px</h3>
+<app-tinymce  #tinymce2 height="300" width="800" ></app-tinymce>
+<br>
+<p>{{content2}}</p>
+<button nz-button nzType="primary" (click)="setValue()" style="margin-right:8px">ViewChild设置内容</button>
+<button nz-button nzType="primary" (click)="getValue()" style="margin-right:8px">获取内容</button>
+<button nz-button nzType="primary" (click)="tinymce2.setContent('11111')">直接设置内容</button>
