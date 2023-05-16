@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
+
 import java.util.Map;
 
 
@@ -30,7 +32,7 @@ public class KafkaController {
             @ApiImplicitParam(name = "message", value = "消息数据", dataType = "Map", required = true, paramType = "body"),
     })
     @PostMapping("/sendKafkaSyncMessage")
-    public ResponseEntity<?> sendKafkaSyncMessage(@RequestBody Map<String, Object> data) {
+    public ResponseEntity<?> sendKafkaSyncMessage(@RequestBody @ApiIgnore Map<String, Object> data) {
         String topic = data.get("topic").toString();
         String message = JSON.toJSONString(data.get("message"));
         try {
@@ -48,7 +50,7 @@ public class KafkaController {
             @ApiImplicitParam(name = "message", value = "消息数据", dataType = "Map", required = true, paramType = "body"),
     })
     @PostMapping("/sendKafkaAsyncMessage")
-    public ResponseEntity<?> sendKafkaAsyncMessage(@RequestBody Map<String, Object> data) {
+    public ResponseEntity<?> sendKafkaAsyncMessage(@RequestBody @ApiIgnore Map<String, Object> data) {
         String topic = data.get("topic").toString();
         String message = JSON.toJSONString(data.get("message"));
         try {
