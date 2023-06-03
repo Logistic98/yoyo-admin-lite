@@ -250,7 +250,6 @@ $ npm run build
 后端项目打包
 
 ```
-
 $ mvn clean
 $ mvn install
 $ mvn package
