@@ -28,26 +28,6 @@ public class SysConstants {
     public static final String EMPTY_URL = "#";
 
     /**
-     * 中括号
-     */
-    public static final String BRACKET = "[]";
-
-    /**
-     * 本地IP
-     */
-    public static final String LOCAL_IP = "127.0.0.1";
-
-    /**
-     * unknown
-     */
-    public static final String UNKNOWN = "unknown";
-
-    /**
-     * 导入数据标题
-     */
-    public static Map<String, String> headerAlias = new HashMap<>();
-
-    /**
      * 配置文件选择
      */
     public final static class CONFIG_CHOOSE{
