@@ -1,5 +1,6 @@
 package com.yoyo.admin.common.utils;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -215,6 +216,22 @@ public class ObjectConvertUtils {
             return 0;
         }
         return null;
+    }
+
+    /**
+     * 判断实体类是否为空
+     * @param obj
+     * @return
+     * @throws IllegalAccessException
+     */
+    public static boolean isEntityEmpty(Object obj) throws IllegalAccessException {
+        for (Field field : obj.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            if (field.get(obj) != null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static void main(String[] args) {
