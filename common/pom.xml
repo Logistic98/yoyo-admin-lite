@@ -27,6 +27,7 @@
         <swagger.bootstrap.ui.version>1.9.6</swagger.bootstrap.ui.version>
         <jjwt.version>0.9.1</jjwt.version>
         <druid.spring.boot.starter.version>1.1.10</druid.spring.boot.starter.version>
+        <aliyun.java.sdk.core.version>4.1.1</aliyun.java.sdk.core.version>
     </properties>
     <packaging>jar</packaging>
 
@@ -156,6 +157,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <!-- 阿里大于（大鱼）短信 -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>${aliyun.java.sdk.core.version}</version>
         </dependency>
     </dependencies>
 
